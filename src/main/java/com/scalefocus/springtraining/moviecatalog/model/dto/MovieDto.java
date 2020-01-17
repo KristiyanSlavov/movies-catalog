@@ -1,33 +1,37 @@
-package com.scalefocus.springtraining.moviecatalog.dto;
+package com.scalefocus.springtraining.moviecatalog.model.dto;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 /**
  * @author Kristiyan SLavov
  */
-public class MovieDTO {
+public class MovieDto {
 
-    private String id;
-
+    @NotBlank(message = "The title is required!")
     private String title;
 
+    @NotBlank(message = "The writer is required!")
     private String writer;
 
+    @NotBlank(message = "The genre is required!")
     private String genre;
 
+    @NotBlank(message = "The runtime is required!")
     private String runtime;
 
+    @NotNull(message = "The release date is required!")
+    @PastOrPresent(message = "Must be a past or present date!")
     private LocalDate releaseDate;
 
-    private double rate;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    @NotNull(message = "The rate is required!")
+    @DecimalMax("10.0")
+    @DecimalMin("0.0")
+    private Double rate;
 
     public String getTitle() {
         return title;

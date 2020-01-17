@@ -1,45 +1,60 @@
-package com.scalefocus.springtraining.moviecatalog.model;
+package com.scalefocus.springtraining.moviecatalog.model.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 /**
  * @author Kristiyan SLavov
+ * The movie class.
+ * It is an entity class and it'll store the details of the movies.
  */
 @Document(collection = "movies")
 public class Movie {
 
-    @Id
-    private String id;
+    // This static field is a unique reference
+    // to the auto-incremented sequence for the MOVIES collection.
+    // Also annotated with @Transient to prevent it from being
+    // persisted alongside other properties of the model.
+    @Transient
+    public static final String SEQUENCE_NAME = "movies_sequence";
 
+    @Id
+    private Long id;
+
+    @NotBlank(message = "The title is required!")
     private String title;
 
+    @NotBlank(message = "The writer is required!")
     private String writer;
 
+    @NotBlank(message = "The genre is required!")
     private String genre;
 
+    @NotBlank(message = "The runtime is required!")
     private String runtime;
 
+    @NotNull(message = "The release date is required!")
+    @PastOrPresent(message = "Must be a past or present date!")
     private LocalDate releaseDate;
 
-    private double rate;
+    @NotNull(message = "The rate is required!")
+    @DecimalMax("10.0")
+    @DecimalMin("0.0")
+    private Double rate;
 
-    public Movie(String title, String writer, String genre, String runtime, LocalDate releaseDate, double rate) {
-        this.title = title;
-        this.writer = writer;
-        this.genre = genre;
-        this.runtime = runtime;
-        this.releaseDate = releaseDate;
-        this.rate = rate;
-    }
-
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -83,11 +98,11 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public double getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(double rate) {
+    public void setRate(Double rate) {
         this.rate = rate;
     }
 
