@@ -1,4 +1,4 @@
-package com.scalefocus.springtraining.moviecatalog.service;
+package com.scalefocus.springtraining.moviecatalog.service.converter;
 
 import com.scalefocus.springtraining.moviecatalog.model.dto.MovieDto;
 import com.scalefocus.springtraining.moviecatalog.model.entity.Movie;

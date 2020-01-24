@@ -1,4 +1,4 @@
-package com.scalefocus.springtraining.moviecatalog.service;
+package com.scalefocus.springtraining.moviecatalog.service.idgenerator;
 
 import com.scalefocus.springtraining.moviecatalog.model.databasesequence.DatabaseSequence;
 
@@ -30,7 +30,7 @@ public class DatabaseSequenceGenerator {
         this.mongoOperations = mongoOperations;
     }
 
-    long generateSequence(String seqName) {
+    public long generateSequence(String seqName) {
         DatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
                 new Update().inc("seq", 1), options().returnNew(true).upsert(true),
                 DatabaseSequence.class);

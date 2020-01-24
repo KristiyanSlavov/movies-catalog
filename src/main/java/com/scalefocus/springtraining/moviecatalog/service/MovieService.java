@@ -5,6 +5,7 @@ import com.scalefocus.springtraining.moviecatalog.exception.MovieDuplicateKeyExc
 import com.scalefocus.springtraining.moviecatalog.exception.MovieNotFoundException;
 import com.scalefocus.springtraining.moviecatalog.model.entity.Movie;
 import com.scalefocus.springtraining.moviecatalog.repository.MovieRepository;
+import com.scalefocus.springtraining.moviecatalog.service.converter.MovieConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

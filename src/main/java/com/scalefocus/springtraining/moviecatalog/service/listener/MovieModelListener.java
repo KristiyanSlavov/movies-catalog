@@ -1,6 +1,7 @@
-package com.scalefocus.springtraining.moviecatalog.service;
+package com.scalefocus.springtraining.moviecatalog.service.listener;
 
 import com.scalefocus.springtraining.moviecatalog.model.entity.Movie;
+import com.scalefocus.springtraining.moviecatalog.service.idgenerator.DatabaseSequenceGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
