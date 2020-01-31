@@ -8,9 +8,10 @@ import java.io.Serializable;
  *
  * @author Kristiyan SLavov
  */
-public class JwtRequest implements Serializable {
+//implements Serializable
+public class JwtRequest {
 
-    private static final long SERIAL_VERSION_UID = 5926468583005150707L;
+    //private static final long SERIAL_VERSION_UID = 5926468583005150707L;
 
     private String username;
 

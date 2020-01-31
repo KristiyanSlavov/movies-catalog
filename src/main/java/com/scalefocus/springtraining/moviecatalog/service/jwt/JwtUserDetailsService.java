@@ -1,4 +1,4 @@
-package com.scalefocus.springtraining.moviecatalog.service;
+package com.scalefocus.springtraining.moviecatalog.service.jwt;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

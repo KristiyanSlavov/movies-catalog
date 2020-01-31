@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Kristiyan SLavov
  * <p>
  * The movie model listener class.
  * This class is reposinble for setting the id field every time
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
  * For this purpose, it overrides onBeforeConvert method
  * and by using the databaseSequenceGenerator which generates the id
  * it sets the id of the new record.
+ *
+ * @author Kristiyan SLavov
  */
 @Service
 public class MovieModelListener extends AbstractMongoEventListener<Movie> {

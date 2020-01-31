@@ -1,6 +1,6 @@
 package com.scalefocus.springtraining.moviecatalog.model.jwt;
 
-import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * JwtResponse is required for creating a response containing the JWT
@@ -8,17 +8,29 @@ import java.io.Serializable;
  *
  * @author Kristiyan SLavov
  */
-public class JwtResponse implements Serializable {
+public class JwtResponse {
 
-    private static final long SERIAL_VERSION_UID = -8091879091924046844L;
+    private final String tokenType;
 
-    private final String jwtToken;
+    private final String token;
 
-    public JwtResponse(String jwtToken) {
-        this.jwtToken = jwtToken;
+    private final LocalDateTime expiresIn;
+
+    public JwtResponse(String tokenType, String token, LocalDateTime expiresIn) {
+        this.tokenType = tokenType;
+        this.token = token;
+        this.expiresIn = expiresIn;
     }
 
-    public String getJwtToken() {
-        return jwtToken;
+    public String getToken() {
+        return token;
+    }
+
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    public LocalDateTime getExpiresIn() {
+        return expiresIn;
     }
 }

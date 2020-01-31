@@ -1,13 +1,17 @@
-package com.scalefocus.springtraining.moviecatalog.config;
+package com.scalefocus.springtraining.moviecatalog.config.jwt;
 
+import com.scalefocus.springtraining.moviecatalog.util.DateUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,9 +25,7 @@ import java.util.function.Function;
  * @author Kristiyan SLavov
  */
 @Component
-public class JwtTokenUtil implements Serializable {
-
-    private static final long SERIAL_VERSION_UID = -2550185165626007488L;
+public class JwtTokenUtil {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60L;
 
@@ -36,8 +38,8 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //retrieve expiration date from jwt token
-    public Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
+    public LocalDateTime getExpirationDateFromToken(String token) {
+        return DateUtils.asLocalDateTime(getClaimFromToken(token, Claims::getExpiration));
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -52,8 +54,8 @@ public class JwtTokenUtil implements Serializable {
 
     //check if the token has expired
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        final LocalDateTime expiration = getExpirationDateFromToken(token);
+        return expiration.isBefore(LocalDateTime.now());
     }
 
     //generate token for user
@@ -68,9 +70,14 @@ public class JwtTokenUtil implements Serializable {
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
     }
 
     //validate token

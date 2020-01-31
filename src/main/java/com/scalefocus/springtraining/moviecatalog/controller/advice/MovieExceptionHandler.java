@@ -1,4 +1,4 @@
-package com.scalefocus.springtraining.moviecatalog.controller;
+package com.scalefocus.springtraining.moviecatalog.controller.advice;
 
 import com.scalefocus.springtraining.moviecatalog.model.error.ErrorResponse;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieDuplicateKeyException;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -45,10 +44,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         //response.sendError(HttpStatus.BAD_REQUEST.value());
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                LocalDateTime.now()
-        );
+                HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -56,10 +52,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMovieNotFound(Exception ex) {
         ErrorResponse errors = new ErrorResponse(
                 ex.getMessage(),
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                LocalDateTime.now()
-        );
+                HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
@@ -67,10 +60,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMoviesDuplicateKey(Exception ex) {
         ErrorResponse errors = new ErrorResponse(
                 ex.getMessage(),
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
-                LocalDateTime.now()
-        );
+                HttpStatus.UNPROCESSABLE_ENTITY);
         return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
@@ -103,10 +93,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
                                                                       WebRequest request) {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
-                HttpStatus.METHOD_NOT_ALLOWED.value(),
-                HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
-                LocalDateTime.now()
-        );
+                HttpStatus.METHOD_NOT_ALLOWED);
         return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -117,10 +104,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
                                                                WebRequest request) {
         ErrorResponse error = new ErrorResponse(
                 ex.getCause().getMessage(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                LocalDateTime.now()
-        );
+                HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -131,10 +115,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
                                                      WebRequest request) {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                LocalDateTime.now()
-        );
+                HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,11 +1,14 @@
 package com.scalefocus.springtraining.moviecatalog.model.error;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.http.HttpStatus;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Kristiyan SLavov
- *
+ * <p>
  * The custom error response class.
  * It represent the actual error response
  * that will be sent to the user when some exception is catched.
@@ -18,14 +21,14 @@ public class ErrorResponse {
 
     private final String httpError;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private final LocalDateTime timestamp;
+    private final String dateTime;
 
-    public ErrorResponse(String message, int httpStatus, String httpError, LocalDateTime timestamp) {
+    public ErrorResponse(String message,
+                         HttpStatus httpStatus) {
         this.message = message;
-        this.httpStatus = httpStatus;
-        this.httpError = httpError;
-        this.timestamp = timestamp;
+        this.httpStatus = httpStatus.value();
+        this.httpError = httpStatus.getReasonPhrase();
+        this.dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("DD-mm-yyyy hh:mm:ss"));
     }
 
     public String getMessage() {
@@ -40,7 +43,7 @@ public class ErrorResponse {
         return httpError;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public String getDateTime() {
+        return dateTime;
     }
 }

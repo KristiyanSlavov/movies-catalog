@@ -1,14 +1,13 @@
-package com.scalefocus.springtraining.moviecatalog.config;
+package com.scalefocus.springtraining.moviecatalog.config.jwt;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * JwtAuthenticationEntryPoint will implements Spring's AuthenticationEntryPoint
@@ -18,13 +17,11 @@ import java.io.Serializable;
  * @author Kristiyan SLavov
  */
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
-
-    private static final long SERIAL_VERSION_UID = -7858869558953243875L;
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+                         AuthenticationException authException) throws IOException, ServletException, JwtException {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }
