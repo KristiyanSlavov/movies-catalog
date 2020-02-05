@@ -1,8 +1,8 @@
 package com.scalefocus.springtraining.moviecatalog.controller.advice;
 
-import com.scalefocus.springtraining.moviecatalog.model.error.ErrorResponse;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieDuplicateKeyException;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieNotFoundException;
+import com.scalefocus.springtraining.moviecatalog.model.error.ErrorResponse;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +17,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
@@ -38,9 +37,15 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
 
-    //Validate for Validating Path Variables and Request Params
+    /**
+     * This method handles exceptions of type {@link ConstraintViolationException}
+     * and return a {@link ResponseEntity} instance
+     * which contains custom {@link ErrorResponse} and {@link HttpStatus}
+     * @param ex - the exception that would be handled
+     * @return - a {@link ResponseEntity} instance
+     */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception ex) throws IOException {
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(Exception ex){
         //response.sendError(HttpStatus.BAD_REQUEST.value());
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
@@ -48,6 +53,13 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * This method handles exceptions of type {@link MovieNotFoundException}
+     * and return a {@link ResponseEntity} instance
+     * which contains custom {@link ErrorResponse} and {@link HttpStatus}
+     * @param ex - the exception that would be handled
+     * @return - a {@link ResponseEntity} instance
+     */
     @ExceptionHandler(MovieNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMovieNotFound(Exception ex) {
         ErrorResponse errors = new ErrorResponse(
@@ -56,6 +68,13 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * This method handles exceptions of type {@link MovieDuplicateKeyException}
+     * and return a {@link ResponseEntity} instance
+     * which contains custom {@link ErrorResponse} and {@link HttpStatus}
+     * @param ex - the exception that would be handled
+     * @return - a {@link ResponseEntity} instance
+     */
     @ExceptionHandler(MovieDuplicateKeyException.class)
     public ResponseEntity<ErrorResponse> handleMoviesDuplicateKey(Exception ex) {
         ErrorResponse errors = new ErrorResponse(
@@ -64,7 +83,15 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    //Error handler for @Valid
+    /**
+     * This method handles exceptions of type {@link MethodArgumentNotValidException},
+     * customize and return a {@link ResponseEntity}.
+     * @param ex - the exception that would be handled
+     * @param headers - the headers to be written to the response
+     * @param status - the selected response status
+     * @param request - the current request
+     * @return a {@link ResponseEntity} instance
+     */
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                HttpHeaders headers,
@@ -85,7 +112,15 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, headers, status);
     }
 
-    //Error handler for Request Method
+    /**
+     * This method handles exceptions of type {@link HttpRequestMethodNotSupportedException},
+     * customize and return a {@link ResponseEntity}.
+     * @param ex - the exception that would be handled
+     * @param headers - the headers to be written to the response
+     * @param status - the selected response status
+     * @param request - the current request
+     * @return a {@link ResponseEntity} instance
+     */
     @Override
     public ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                       HttpHeaders headers,
@@ -97,6 +132,15 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
+    /**
+     * This method handles exceptions of type {@link HttpMessageNotReadableException},
+     * customize and return a {@link ResponseEntity}.
+     * @param ex - the exception that would be handled
+     * @param headers - the headers to be written to the response
+     * @param status - the selected response status
+     * @param request - the current request
+     * @return a {@link ResponseEntity} instance
+     */
     @Override
     public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                HttpHeaders headers,
@@ -108,6 +152,15 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * This method handles exceptions of type {@link TypeMismatchException},
+     * customize and return a {@link ResponseEntity}.
+     * @param ex - the exception that would be handled
+     * @param headers - the headers to be written to the response
+     * @param status - the selected response status
+     * @param request - the current request
+     * @return a {@link ResponseEntity} instance
+     */
     @Override
     public ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
                                                      HttpHeaders headers,

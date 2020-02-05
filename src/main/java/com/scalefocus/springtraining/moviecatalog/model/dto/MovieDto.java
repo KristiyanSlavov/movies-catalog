@@ -8,6 +8,10 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 /**
+ * This class represents the MovieDto and will acts as wrapper
+ * of the {@link com.scalefocus.springtraining.moviecatalog.model.entity.Movie}.
+ * It will be used in the service layer and the web/controller layer.
+ *
  * @author Kristiyan SLavov
  */
 public class MovieDto {

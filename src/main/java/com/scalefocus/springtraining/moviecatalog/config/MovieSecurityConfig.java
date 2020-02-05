@@ -3,9 +3,9 @@ package com.scalefocus.springtraining.moviecatalog.config;
 import com.scalefocus.springtraining.moviecatalog.config.jwt.JwtAuthenticationEntryPoint;
 import com.scalefocus.springtraining.moviecatalog.config.jwt.JwtRequestFilter;
 import com.scalefocus.springtraining.moviecatalog.service.jwt.JwtUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
+ * This class allows customization to both WebSecurity and HttpSecurity.
+ *
  * @author Kristiyan SLavov
  */
 @Configuration
@@ -25,102 +27,78 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MovieSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //TODO: ADD ROLES AND REFACTOR THE CODE!!!
-
-    //    @Override
-    //    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-    //
-    //        auth.inMemoryAuthentication()
-    //                .withUser("user1").password("{noop}user1").roles("USER")
-    //                .and()
-    //                .withUser("admin1").password("{noop}admin1").roles("ADMIN");
-    //    }
-    //
-    //    @Override
-    //    public void configure(HttpSecurity http) throws Exception {
-    //        http.httpBasic()
-    //                .and()
-    //                .authorizeRequests()
-    //                .antMatchers(HttpMethod.GET, "/movies/**").hasAnyRole("USER", "ADMIN")
-    //                .antMatchers(HttpMethod.POST, "/movies/movie").hasRole("ADMIN")
-    //                .antMatchers(HttpMethod.PUT,   "/movies/**").hasRole("ADMIN")
-    //                .antMatchers(HttpMethod.DELETE, "/movies/**").hasRole("ADMIN")
-    //                .and()
-    //                .csrf().disable()
-    //                .formLogin();
-    //    }
-
-
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    //private JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     private JwtUserDetailsService jwtUserDetailsService;
 
-    @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    public MovieSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint /* JwtAccessDeniedHandler jwtAccessDeniedHandler*/ ,
+    public MovieSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
                                JwtUserDetailsService jwtUserDetailsService, JwtRequestFilter jwtRequestFilter) {
 
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        //this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtUserDetailsService = jwtUserDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    /**
+     * This method configures AuthenticationManager
+     * so that it knows from where to load user for matching credentials.
+     * It uses a BCryptPasswordEncode.
+     * @param authManager - {@link AuthenticationManagerBuilder} instance that would be configure
+     * @throws Exception
+     */
     public void configureGlobal(AuthenticationManagerBuilder authManager) throws Exception {
-        // configure AuthenticationManager so that it knows from where to load
-        // user for matching credentials
-        // Use BCryptPasswordEncoder
         authManager.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
+    /**
+     * This method returns a new object of type {@link BCryptPasswordEncoder}.
+     * @return - new {@link BCryptPasswordEncoder} instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * This method returns a new object of type {@link AuthenticationManager}.
+     * @return - new {@link AuthenticationManager} instance
+     * @throws Exception
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * This method is overridden to configure the {@link HttpSecurity}.
+     * @param httpSecurity - {@link HttpSecurity} instance to be configured
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         //We don't need CSRF for this example
         httpSecurity.csrf().disable()
-                        // don't authenticate this particular request
-                        .authorizeRequests().antMatchers("/authenticate").permitAll()
-                        //all other requests need to be authenticated
-                        .anyRequest().authenticated().and()
-                        // make sure we use stateless session;
-                        // session won't be used ti store user's state
-                        .exceptionHandling()./*accessDeniedHandler(jwtAccessDeniedHandler) */
-                        authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                        .and()
-                        .sessionManagement()
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                // don't authenticate this particular request
+                .authorizeRequests()
+                .antMatchers("/authenticate").permitAll()
+                .antMatchers(HttpMethod.GET, "/movies/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/movies/movie").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/movies/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/movies/**").hasRole("ADMIN")
+                //all other requests need to be authenticated
+                .anyRequest().authenticated().and()
+                // make sure we use stateless session;
+                // session won't be used ti store user's state
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

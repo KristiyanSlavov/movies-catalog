@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
+ * This interface is used for communication with MongoDB.
+ * It uses the {@link MongoRepository} methods for this purpose.
+ *
  * @author Kristiyan SLavov
  */
 @Repository

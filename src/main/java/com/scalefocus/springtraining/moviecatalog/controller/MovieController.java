@@ -1,8 +1,8 @@
 package com.scalefocus.springtraining.moviecatalog.controller;
 
-import com.scalefocus.springtraining.moviecatalog.model.dto.MovieDto;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieDuplicateKeyException;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieNotFoundException;
+import com.scalefocus.springtraining.moviecatalog.model.dto.MovieDto;
 import com.scalefocus.springtraining.moviecatalog.model.entity.Movie;
 import com.scalefocus.springtraining.moviecatalog.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;

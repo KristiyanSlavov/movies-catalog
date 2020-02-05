@@ -1,17 +1,12 @@
 package com.scalefocus.springtraining.moviecatalog.model.jwt;
 
-import java.io.Serializable;
-
 /**
  * JwtRequest is required for storing the username and the password
  * we received from the client.
  *
  * @author Kristiyan SLavov
  */
-//implements Serializable
 public class JwtRequest {
-
-    //private static final long SERIAL_VERSION_UID = 5926468583005150707L;
 
     private String username;
 

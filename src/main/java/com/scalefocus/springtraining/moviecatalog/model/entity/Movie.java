@@ -12,9 +12,10 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 /**
+ * It is an entity class and it'll store the details of the movies
+ * that come from the database.
+ *
  * @author Kristiyan SLavov
- * The movie class.
- * It is an entity class and it'll store the details of the movies.
  */
 @Document(collection = "movies")
 public class Movie {

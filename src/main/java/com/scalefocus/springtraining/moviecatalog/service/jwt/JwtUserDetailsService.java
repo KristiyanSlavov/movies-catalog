@@ -6,7 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * JwtUserDetailsService implements the Spring Security UserDetailsService interface.
@@ -20,13 +21,35 @@ import java.util.ArrayList;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
+    private static final String USER_NOT_FOUND_MSG = "No User was found with the given username";
+
+    //BCrypted pass: 123456789
+    private final UserDetails javaInUseUser = new User("javainuse",
+            "$2a$10$qrQUwxcfxGjAaXQnZ66ewe6etIQy8eTi00G4Sxo4mte56oqIzIw8O",
+            Arrays.asList(() -> "ROLE_ADMIN", () -> "ROLE_USER"));
+
+    //BCrypted pass: 12345678
+    private final UserDetails testUser = new User("testuser",
+            "$2y$12$39OFhWEhoEjiieD8CT9tXe7XFwsk9R6taifWrRek6O18OvXMHjVeC",
+            Collections.singletonList(() -> "ROLE_USER"));
+
+    /**
+     * This method is used to load a user by the specified username.
+     * Actually this method works only with two hardcoded users {@link JwtUserDetailsService#javaInUseUser},
+     * {@link JwtUserDetailsService#testUser} and if the specified name
+     * is equal to one of these users usernames it will return one of these {@link UserDetails} objects.
+     * @param username - the specified username
+     * @return a new {@link UserDetails} instance
+     * @throws UsernameNotFoundException if the username is not equal to one of the given objects.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if("javainuse".equals(username)) {
-            return new User("javainuse", "$2a$10$qrQUwxcfxGjAaXQnZ66ewe6etIQy8eTi00G4Sxo4mte56oqIzIw8O",
-                    new ArrayList<>());
+        if (javaInUseUser.getUsername().equals(username)) {
+            return javaInUseUser;
+        } else if (testUser.getUsername().equals(username)) {
+            return testUser;
         } else {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new UsernameNotFoundException(USER_NOT_FOUND_MSG);
         }
     }
 }

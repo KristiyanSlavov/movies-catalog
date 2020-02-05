@@ -1,8 +1,8 @@
 package com.scalefocus.springtraining.moviecatalog.service;
 
-import com.scalefocus.springtraining.moviecatalog.model.dto.MovieDto;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieDuplicateKeyException;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieNotFoundException;
+import com.scalefocus.springtraining.moviecatalog.model.dto.MovieDto;
 import com.scalefocus.springtraining.moviecatalog.model.entity.Movie;
 import com.scalefocus.springtraining.moviecatalog.repository.MovieRepository;
 import com.scalefocus.springtraining.moviecatalog.service.converter.MovieConverter;
@@ -126,8 +126,7 @@ public class MovieService {
             throw new MovieDuplicateKeyException("Duplicate records.");
         }
 
-        return new ResponseEntity<>(movieConverter.toDto(movieRepository.insert(entityMovie)),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(movieConverter.toDto(movieRepository.insert(entityMovie)), HttpStatus.CREATED);
     }
 
     /**
