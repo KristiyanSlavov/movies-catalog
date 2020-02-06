@@ -3,6 +3,7 @@ package com.scalefocus.springtraining.moviecatalog.controller.advice;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieDuplicateKeyException;
 import com.scalefocus.springtraining.moviecatalog.exception.MovieNotFoundException;
 import com.scalefocus.springtraining.moviecatalog.model.error.ErrorResponse;
+import com.scalefocus.springtraining.moviecatalog.util.GeneralConstant;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +18,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -98,7 +98,7 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
                                                                HttpStatus status,
                                                                WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("DD-mm-yyyy hh:mm:ss")));
+        body.put("timestamp", GeneralConstant.DATE_NOW.format(DateTimeFormatter.ofPattern("DD-mm-yyyy hh:mm:ss")));
         body.put("status", status.value());
 
         //Get all fields errors

@@ -6,6 +6,7 @@ import com.scalefocus.springtraining.moviecatalog.model.dto.MovieDto;
 import com.scalefocus.springtraining.moviecatalog.model.entity.Movie;
 import com.scalefocus.springtraining.moviecatalog.repository.MovieRepository;
 import com.scalefocus.springtraining.moviecatalog.service.converter.MovieConverter;
+import com.scalefocus.springtraining.moviecatalog.util.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class MovieService {
      * @throws MovieNotFoundException
      */
     public Movie getById(Long id) throws MovieNotFoundException {
-        return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException("Movie not found"));
+        return movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundException(ErrorMessage.MOVIE_NOT_FOUND.toString()));
     }
 
     /**
@@ -58,7 +59,7 @@ public class MovieService {
      */
     public ResponseEntity<List<MovieDto>> getAll() throws MovieNotFoundException {
         if (movieRepository.findAll().isEmpty()) {
-            throw new MovieNotFoundException("Movie not found");
+            throw new MovieNotFoundException(ErrorMessage.MOVIE_NOT_FOUND.toString());
         }
         List<MovieDto> movieDtoList = movieConverter.toDtoList(movieRepository.findAll());
 
@@ -79,7 +80,7 @@ public class MovieService {
      */
     public ResponseEntity<List<MovieDto>> getByGenre(String genre) throws MovieNotFoundException {
         if (movieRepository.findByGenreIgnoreCase(genre).isEmpty()) {
-            throw new MovieNotFoundException("Movie not found");
+            throw new MovieNotFoundException(ErrorMessage.MOVIE_NOT_FOUND.toString());
         }
         List<MovieDto> movieDtoList = movieConverter.toDtoList(movieRepository.findByGenreIgnoreCase(genre));
 
@@ -100,7 +101,7 @@ public class MovieService {
      */
     public ResponseEntity<List<MovieDto>> getByRate(Double rate) throws MovieNotFoundException {
         if (movieRepository.findByRate(rate).isEmpty()) {
-            throw new MovieNotFoundException("Movie not found");
+            throw new MovieNotFoundException(ErrorMessage.MOVIE_NOT_FOUND.toString());
         }
         List<MovieDto> movieDtoList = movieConverter.toDtoList(movieRepository.findByRate(rate));
 
@@ -123,7 +124,7 @@ public class MovieService {
         Movie entityMovie = movieConverter.toEntity(movieDto);
 
         if (movieRepository.findByTitleIgnoreCaseAndWriterIgnoreCase(entityMovie.getTitle(), entityMovie.getWriter()) != null) {
-            throw new MovieDuplicateKeyException("Duplicate records.");
+            throw new MovieDuplicateKeyException(ErrorMessage.DUPLICATE_RECORDS.toString());
         }
 
         return new ResponseEntity<>(movieConverter.toDto(movieRepository.insert(entityMovie)), HttpStatus.CREATED);
@@ -174,7 +175,7 @@ public class MovieService {
             movieRepository.deleteById(id);
             return ResponseEntity.ok("Movie is deleted successfully");
         } else {
-            throw new MovieNotFoundException("Movie not found");
+            throw new MovieNotFoundException(ErrorMessage.MOVIE_NOT_FOUND.toString());
         }
     }
 }

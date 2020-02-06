@@ -3,6 +3,7 @@ package com.scalefocus.springtraining.moviecatalog.config;
 import com.scalefocus.springtraining.moviecatalog.config.jwt.JwtAuthenticationEntryPoint;
 import com.scalefocus.springtraining.moviecatalog.config.jwt.JwtRequestFilter;
 import com.scalefocus.springtraining.moviecatalog.service.jwt.JwtUserDetailsService;
+import com.scalefocus.springtraining.moviecatalog.util.Authority;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -84,10 +85,10 @@ public class MovieSecurityConfig extends WebSecurityConfigurerAdapter {
                 // don't authenticate this particular request
                 .authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
-                .antMatchers(HttpMethod.GET, "/movies/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/movies/movie").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/movies/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/movies/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/movies/**").hasAnyRole(Authority.USER.name(), Authority.ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/movies/movie").hasRole(Authority.ADMIN.name())
+                .antMatchers(HttpMethod.PUT, "/movies/**").hasRole(Authority.ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/movies/**").hasRole(Authority.ADMIN.name())
                 //all other requests need to be authenticated
                 .anyRequest().authenticated().and()
                 // make sure we use stateless session;

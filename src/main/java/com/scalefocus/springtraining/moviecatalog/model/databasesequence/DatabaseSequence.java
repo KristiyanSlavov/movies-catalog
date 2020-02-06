@@ -4,11 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * @author Kristiyan SLavov
  *
  * The database sequence class.
  * It is a collection that'll store the auto-incremented
  * sequence for other collections.
+ *
+ * @author Kristiyan SLavov
  */
 @Document(collection = "database_sequences")
 public class DatabaseSequence {

@@ -21,6 +21,8 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 @Service
 public class DatabaseSequenceGenerator {
 
+    private static final String SEQUENCE_KEY = "seq";
+
     private MongoOperations mongoOperations;
 
     public DatabaseSequenceGenerator(MongoOperations mongoOperations) {
@@ -33,7 +35,7 @@ public class DatabaseSequenceGenerator {
      */
     public long generateSequence(String seqName) {
         DatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
-                new Update().inc("seq", 1), options().returnNew(true).upsert(true),
+                new Update().inc(SEQUENCE_KEY, 1), options().returnNew(true).upsert(true),
                 DatabaseSequence.class);
         return !Objects.isNull(counter) ? counter.getSeq() : 1;
     }

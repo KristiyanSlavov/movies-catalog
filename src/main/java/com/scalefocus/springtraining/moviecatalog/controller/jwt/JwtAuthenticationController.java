@@ -3,6 +3,8 @@ package com.scalefocus.springtraining.moviecatalog.controller.jwt;
 import com.scalefocus.springtraining.moviecatalog.model.jwt.JwtRequest;
 import com.scalefocus.springtraining.moviecatalog.model.jwt.JwtResponse;
 import com.scalefocus.springtraining.moviecatalog.service.jwt.JwtTokenService;
+import com.scalefocus.springtraining.moviecatalog.util.ErrorMessage;
+import com.scalefocus.springtraining.moviecatalog.util.GeneralConstant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,12 +31,6 @@ import java.time.LocalDateTime;
 @CrossOrigin
 public class JwtAuthenticationController {
 
-    private static final String BEARER_TOKEN_TYPE = "Bearer";
-
-    private static final String USER_DISABLED_MSG = "USER DISABLED";
-
-    private static final String INVALID_CREDENTIALS_MSG = "INVALID CREDENTIALS";
-
     private AuthenticationManager authenticationManager;
 
     private JwtTokenService jwtTokenService;
@@ -53,6 +49,7 @@ public class JwtAuthenticationController {
      * the username and the password of the user. If the authentication is
      * successful then this method returns a {@link ResponseEntity} with
      * {@link JwtResponse} instance which contains a token, token type and token expiry date.
+     *
      * @param authenticationRequest - the {@link JwtRequest} authenticationRequest
      * @return {@link ResponseEntity} with {@link JwtResponse}
      */
@@ -64,12 +61,13 @@ public class JwtAuthenticationController {
         final String token = jwtTokenService.generateToken(userDetails);
         final LocalDateTime tokenExpirationDate = jwtTokenService.getExpirationDateFromToken(token);
 
-        return ResponseEntity.ok(new JwtResponse(BEARER_TOKEN_TYPE, token, tokenExpirationDate));
+        return ResponseEntity.ok(new JwtResponse(GeneralConstant.BEARER_TOKEN_TYPE, token, tokenExpirationDate));
     }
 
     /**
      * This method gets the username and the password and uses {@link AuthenticationManager#authenticate}
      * to authenticate the username and the password of the user
+     *
      * @param username - the username
      * @param password - the password
      */
@@ -77,9 +75,9 @@ public class JwtAuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new DisabledException(USER_DISABLED_MSG, e);
+            throw new DisabledException(ErrorMessage.USER_DISABLED.toString(), e);
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(INVALID_CREDENTIALS_MSG, e);
+            throw new BadCredentialsException(ErrorMessage.INVALID_CREDENTIALS.toString(), e);
         }
     }
 }

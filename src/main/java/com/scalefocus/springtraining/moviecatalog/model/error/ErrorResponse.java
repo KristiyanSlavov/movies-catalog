@@ -1,8 +1,8 @@
 package com.scalefocus.springtraining.moviecatalog.model.error;
 
+import com.scalefocus.springtraining.moviecatalog.util.GeneralConstant;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -27,7 +27,7 @@ public class ErrorResponse {
         this.message = message;
         this.httpStatus = httpStatus.value();
         this.httpError = httpStatus.getReasonPhrase();
-        this.dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("DD-mm-yyyy hh:mm:ss"));
+        this.dateTime = GeneralConstant.DATE_NOW.format(DateTimeFormatter.ofPattern("DD-mm-yyyy hh:mm:ss"));
     }
 
     public String getMessage() {

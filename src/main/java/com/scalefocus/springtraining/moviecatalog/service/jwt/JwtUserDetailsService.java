@@ -1,5 +1,6 @@
 package com.scalefocus.springtraining.moviecatalog.service.jwt;
 
+import com.scalefocus.springtraining.moviecatalog.util.ErrorMessage;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,8 +22,6 @@ import java.util.Collections;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private static final String USER_NOT_FOUND_MSG = "No User was found with the given username";
-
     //BCrypted pass: 123456789
     private final UserDetails javaInUseUser = new User("javainuse",
             "$2a$10$qrQUwxcfxGjAaXQnZ66ewe6etIQy8eTi00G4Sxo4mte56oqIzIw8O",
@@ -38,8 +37,10 @@ public class JwtUserDetailsService implements UserDetailsService {
      * Actually this method works only with two hardcoded users {@link JwtUserDetailsService#javaInUseUser},
      * {@link JwtUserDetailsService#testUser} and if the specified name
      * is equal to one of these users usernames it will return one of these {@link UserDetails} objects.
+     *
      * @param username - the specified username
      * @return a new {@link UserDetails} instance
+     *
      * @throws UsernameNotFoundException if the username is not equal to one of the given objects.
      */
     @Override
@@ -49,7 +50,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         } else if (testUser.getUsername().equals(username)) {
             return testUser;
         } else {
-            throw new UsernameNotFoundException(USER_NOT_FOUND_MSG);
+            throw new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND.toString());
         }
     }
 }

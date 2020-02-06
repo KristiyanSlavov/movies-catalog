@@ -1,6 +1,7 @@
 package com.scalefocus.springtraining.moviecatalog.service.jwt;
 
 import com.scalefocus.springtraining.moviecatalog.util.DateUtils;
+import com.scalefocus.springtraining.moviecatalog.util.GeneralConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -23,8 +23,6 @@ import java.util.function.Function;
 @Component
 public class JwtTokenService {
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60L;
-
     private final String secret;
 
     public JwtTokenService(@Value("${jwt.secret}") String secret) {
@@ -33,6 +31,7 @@ public class JwtTokenService {
 
     /**
      * This method retrieves the username from the JWT token
+     *
      * @param token - the JWT token
      * @return the username
      */
@@ -42,6 +41,7 @@ public class JwtTokenService {
 
     /**
      * This method retrieves the expiration date from the JWT token
+     *
      * @param token - the JWT token
      * @return the expiration date
      */
@@ -51,10 +51,11 @@ public class JwtTokenService {
 
     /**
      * This method gets the claims from the JWT token.
-     * @param token - the JWT token
+     *
+     * @param token          - the JWT token
      * @param claimsResolver - used to resolve the claims
-     * @param <T> - the type of the resolved part (the username type - String,
-     *           or the expirationdate type - localDateTime, etc.)
+     * @param <T>            - the type of the resolved part (the username type - String,
+     *                       or the expirationdate type - localDateTime, etc.)
      * @return the resolved part from the claims
      */
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -66,17 +67,19 @@ public class JwtTokenService {
 
     /**
      * This method checks if the token is expired.
+     *
      * @param token - the JWT token to be checked
      * @return true if the token is expired or false if it is not.
      */
     private Boolean isTokenExpired(String token) {
         final LocalDateTime expiration = getExpirationDateFromToken(token);
-        return expiration.isBefore(LocalDateTime.now());
+        return expiration.isBefore(GeneralConstant.DATE_NOW);
     }
 
     /**
      * This method validates the given JWT token.
-     * @param token - the JWT token to be validated
+     *
+     * @param token       - the JWT token to be validated
      * @param userDetails - the user details
      * @return true if the JWT token is valid or false if it is not.
      */
@@ -88,6 +91,7 @@ public class JwtTokenService {
     /**
      * This method uses {@link JwtTokenService#doGenerateToken} to generate
      * a JWT token to the specified user.
+     *
      * @param userDetails - the specified user
      * @return the generated JWT token
      */
@@ -100,6 +104,7 @@ public class JwtTokenService {
      * This method retrieves any information from the token
      * by using the secret key ("javainuse"). It uses the Jwts.parser method
      * to parse the given JWT token.
+     *
      * @param token - thw JWT token to be parsed.
      * @return the claims
      */
@@ -109,7 +114,8 @@ public class JwtTokenService {
 
     /**
      * This method is used to generate a JWT tokens
-     * @param claims - the claims of the token to be defined, like Issued, Expiration, Subject, etc.
+     *
+     * @param claims  - the claims of the token to be defined, like Issued, Expiration, Subject, etc.
      * @param subject - the user for which will be created a new JWT token
      * @return new JWT token
      */
@@ -119,12 +125,13 @@ public class JwtTokenService {
         //2. Sign the JWT using the HS512 algorithm and secret key.
         //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
         //   compaction of the JWT to a URL-safe string
+
         return Jwts
                 .builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setIssuedAt(DateUtils.asDate(GeneralConstant.DATE_NOW))
+                .setExpiration(DateUtils.asDate(GeneralConstant.DATE_NOW.plusSeconds(3600)))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
