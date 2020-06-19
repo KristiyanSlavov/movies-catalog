@@ -74,15 +74,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     throws ServletException, IOException {
 
         final String requestTokenHeader = request.getHeader(AUTHORIZATION_HEADER);
-        assert requestTokenHeader != null;
-        //check if the request authorization header contains the "bearer" word
-        final boolean isBearerTokenAuthorization = requestTokenHeader.trim().split(" ")[0].toLowerCase().equals(GeneralConstant.BEARER_TOKEN_TYPE);
         String username = null;
         String jwtToken = null;
 
         //JWT Token is in the form "Bearer token".
-        //If the header contains a bearer token, extract it
-        if (isBearerTokenAuthorization) {
+        //If the header is not null & contains a bearer token, extract it
+        if (requestTokenHeader != null && requestTokenHeader.trim().split(" ")[0].toLowerCase().equals(GeneralConstant.BEARER_TOKEN_TYPE)) {
             jwtToken = requestTokenHeader.split(" ")[1];
             try {
                 username = jwtTokenService.getUsernameFromToken(jwtToken);

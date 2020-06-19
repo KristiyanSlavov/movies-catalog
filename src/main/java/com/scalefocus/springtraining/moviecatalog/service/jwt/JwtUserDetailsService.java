@@ -15,22 +15,28 @@ import java.util.Collections;
  * It overrides the loadUserByUsername for fetching user details from database using the username.
  * The Spring Security Authentication Manager calls this method for getting the user details from
  * the database when authenticating the user details provided by the user. Here we are getting the USER
- * DETAILS FROM HARDCODED USER LIST.Also the password for a user is stored in encrypted format using BCrypt.
+ * DETAILS FROM HARDCODED USER LIST. Also the password for a user is stored in encrypted format using BCrypt.
  *
  * @author Kristiyan SLavov
  */
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    //BCrypted pass: 123456789
-    private final UserDetails javaInUseUser = new User("javainuse",
-            "$2a$10$qrQUwxcfxGjAaXQnZ66ewe6etIQy8eTi00G4Sxo4mte56oqIzIw8O",
-            Arrays.asList(() -> "ROLE_ADMIN", () -> "ROLE_USER"));
+    private final UserDetails javaInUseUser;
 
-    //BCrypted pass: 12345678
-    private final UserDetails testUser = new User("testuser",
-            "$2y$12$39OFhWEhoEjiieD8CT9tXe7XFwsk9R6taifWrRek6O18OvXMHjVeC",
-            Collections.singletonList(() -> "ROLE_USER"));
+    private final UserDetails testUser;
+
+    public JwtUserDetailsService() {
+        //BCrypted pass: 123456789
+        javaInUseUser = new User("javainuse",
+                "$2a$12$xVqzk8Fq6rZRfuXX106o8.hvDJMoPQYPeGzbt7ahOahvM6lOE0xlG",
+                Arrays.asList(() -> "ROLE_ADMIN", () -> "ROLE_USER"));
+
+        //BCrypted pass: 12345678
+        testUser = new User("testuser",
+                "$2a$12$39OFhWEhoEjiieD8CT9tXe7XFwsk9R6taifWrRek6O18OvXMHjVeC",
+                Collections.singletonList(() -> "ROLE_USER"));
+    }
 
     /**
      * This method is used to load a user by the specified username.
