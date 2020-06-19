@@ -23,6 +23,7 @@ Running this project requires
 Clone this project. Before building the project, first you have to download and install MongoDB Compass and then you have to change the database credentials in application.properties file, according to your configuration.
 
 Download MongoDB Compass from here: https://docs.mongodb.com/compass/master/install/
+Download Postman from here: https://www.postman.com/downloads/
 
 ## Usage
 
@@ -92,7 +93,7 @@ Required data for Movie creation or update:
 | `/authenticate` | POST | *Login user and get JWT* |
 | `/movies` | GET | *Retrieves all movies* |
 | `/movies/:id` | GET | *Retrieves a movie by it's id* |
-| `/movies/movie` | POST | *Creates movie* |
-| `/movies/:id` | PUT | *Update movie* |
-| `/movies/:id` | DELETE | *Deletes movie* |
+| `/movies/movie` | POST | *Create a movie* |
+| `/movies/:id` | PUT | *Update a movie* |
+| `/movies/:id` | DELETE | *Delete a movie* |
 
